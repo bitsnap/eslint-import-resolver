@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    ["module-resolver", {
+      "root": [
+        "src",
+        "test"
+      ],
+      "alias": {
+        "pam": "alias"
+      }
+    }],
+    ["lodash-magic-import", { "cache": true }]
+  ],
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": { "node": true }
+    }]
+  ]
+}

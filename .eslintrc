@@ -1,0 +1,27 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "node": true
+  },
+  "plugins": [
+    "lodash-magic-import",
+    "eslint-plugin-import",
+    "lodash-fp",
+    "unicorn"
+  ],
+  "settings": {
+    "import/resolver": {
+      "./dist/eslint-import-resolver.min.js": {}
+    }
+  },
+  "extends": [
+    "airbnb",
+    "plugin:lodash-magic-import/recommended",
+    "plugin:lodash-fp/recommended",
+    "plugin:unicorn/recommended"
+  ],
+  "rules": {
+    "import/extensions": "off",
+    "unicorn/no-fn-reference-in-iterator": "off"
+  }
+}

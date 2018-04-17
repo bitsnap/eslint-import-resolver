@@ -1,0 +1,14 @@
+.DS_Store
+
+node_modules/
+!test/fixtures/node_modules/dummy/
+
+.nyc*
+coverage
+.vscode
+
+here
+.babelrc-test
+
+*.lock
+*.log
