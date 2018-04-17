@@ -10,8 +10,13 @@ import isCore from 'core';
 import { readSettings, readDependencies, defaultValidExtensions } from 'settings';
 
 const resolve = (source, file, options = {}) => {
+
+  if (_.isEmpty(source) || !source) {
+    return { found: false };
+  }
+
   if (isCore(source)) {
-    return { found: true, path: source };
+    return { found: true };
   }
 
   const root = _.flow(
@@ -21,11 +26,7 @@ const resolve = (source, file, options = {}) => {
     _.get('root'),
   )(options);
 
-  if (_.isEmpty(source) || !source) {
-    return { found: false };
-  }
-
-  const settings = readSettings(root);
+  const settings = readSettings(root, options);
 
   let aliasedSource = `${source}`;
 
@@ -50,6 +51,12 @@ const resolve = (source, file, options = {}) => {
   let f = exists(curDirMod, validExtensions);
   if (f) {
     return { found: true, path: f };
+  }
+
+  if (_.find(e => (_.isString(e) ?
+    _.startsWith(e)(source)
+    : source.match(e)))(settings.externals)) {
+    return { found: true };
   }
 
   const rootPaths = _.map(r => path.join(root, r, aliasedSource))(settings.root);

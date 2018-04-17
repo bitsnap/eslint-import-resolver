@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = [{}, {
   resolve: {
     modules: [
       'webpack-src',
@@ -13,4 +13,4 @@ module.exports = {
     'jQuery',
     /angular/,
   ],
-};
+}];

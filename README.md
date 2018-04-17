@@ -36,8 +36,9 @@ defaults are
 
 ```js
 {
-  "root": `${process.cwd}`
-  "extensions": ['.js', '.mjs', '.json', '.jsx']
+  "root": `${process.cwd}`,
+  "extensions": ['.js', '.mjs', '.json', '.jsx'],
+  "webpackConfigIndex": 0, // if webpack.config.js exports an Arrays
 }
 ```
 

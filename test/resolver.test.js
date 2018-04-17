@@ -3,6 +3,7 @@ import path from 'path';
 import _ from 'lodash/fp';
 import resolve from 'resolver';
 import isCore from 'core';
+import { clear } from 'settings';
 
 test('Should resolve core modules', (t) => {
   const testTable = ['fs', 'path', 'child_process'];
@@ -12,7 +13,9 @@ test('Should resolve core modules', (t) => {
 });
 
 test('Should resolve modules', (t) => {
-  const testTable = [
+  const addRootDir = p => _.map(e => _.concat(e)(p));
+
+  let testTable = addRootDir(path.normalize(`${__dirname}/..`))([
     ['path', 'path'],
     ['fs', 'fs'],
     ['child_process', 'child_process'],
@@ -30,20 +33,32 @@ test('Should resolve modules', (t) => {
     ['@babel/core', 'node_modules/@babel/core/lib/index.js'],
     ['lodash/fp', 'node_modules/lodash/fp.js'],
     ['lodash/fp/forEach', 'node_modules/lodash/fp/forEach.js'],
-  ];
+  ]);
 
-  t.plan((testTable.length * 2) + 2);
-  const root = path.normalize(`${__dirname}/..`);
+  const testTableWithExternals = addRootDir(path.normalize(`${__dirname}/../test/fixtures/settings-webpack`))([
+    ['jQuery', 'jQuery'],
+    ['angular', 'angular'],
+  ]);
 
-  _.forEach(([m, modPath]) => {
+  testTable = _.concat(testTable)(testTableWithExternals);
+
+  const isExternal = m => _.includes(m)([
+    'jQuery',
+    'angular',
+  ]);
+
+  t.plan(testTable.length + 2);
+
+  _.forEach(([m, modPath, root]) => {
+    clear();
+
     const mod = resolve(
       m,
       path.normalize(`${root}/test.js`),
       { root },
     );
-    t.ok(mod.found);
-    if (isCore(m)) {
-      t.equal(mod.path, modPath);
+    if (isCore(m) || isExternal(m)) {
+      t.ok(mod.found);
     } else {
       t.equal(mod.path, `${root}/${modPath}`);
     }
@@ -51,13 +66,13 @@ test('Should resolve modules', (t) => {
 
   t.notOk(resolve(
     '',
-    path.normalize(`${root}/test.js`),
-    { root },
+    path.normalize(`${__dirname}/../test.js`),
+    { root: `${__dirname}/..` },
   ).found);
 
   t.notOk(resolve(
     'blablablar',
-    path.normalize(`${root}/test.js`),
-    { root },
+    path.normalize(`${__dirname}/../test.js`),
+    { root: `${__dirname}/..` },
   ).found);
 });

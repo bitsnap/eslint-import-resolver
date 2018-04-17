@@ -15,6 +15,7 @@ const moduleResolverSettings = _.flow(
   _.defaults({
     root: [],
     alias: [],
+    externals: [],
   }),
 );
 
@@ -26,7 +27,7 @@ const resolverSettings = _.flow(
   _.defaults({
     resolveDirs: [],
   }),
-  r => ({ root: r.resolveDirs, alias: {} }),
+  r => ({ root: r.resolveDirs, alias: {}, externals: [] }),
 );
 
 export const clear = () => {
@@ -34,26 +35,41 @@ export const clear = () => {
   dependencies = {};
 };
 
-export const readWebpackConfig = (rootDir = '.') => {
+export const readWebpackConfig = (rootDir = '.', opts) => {
   let webpackConfig;
   try {
     // eslint-disable-next-line global-require, import/no-dynamic-require
     webpackConfig = require(path.join(rootDir, 'webpack.config.js'));
   } catch (err) {
-    return { root: [], alias: {} };
+    return { root: [], alias: {}, externals: [] };
   }
 
-  if (!_.isPlainObject(webpackConfig)) {
-    return { root: [], alias: {} };
+  const webpackConfigIndex = _.get('webpackConfigIndex')(opts) || 0;
+
+  if (_.isArray(webpackConfig)) {
+    webpackConfig = _.nth(webpackConfigIndex)(webpackConfig) || {};
+  } else if (!_.isPlainObject(webpackConfig)) {
+    return { root: [], alias: {}, externals: [] };
+  }
+
+  let externals = _.get('externals')(webpackConfig) || [];
+
+  if (_.isArray(externals)) {
+    externals = _.filter(e => _.isString(e) || _.isRegExp(e))(externals);
+  }
+
+  if (_.isPlainObject(externals)) {
+    externals = _.keys(externals);
   }
 
   return {
     root: _.get('resolve.modules')(webpackConfig) || [],
     alias: _.get('resolve.alias')(webpackConfig) || [],
+    externals,
   };
 };
 
-export const readSettings = (rootDir = '.') => {
+export const readSettings = (rootDir = '.', opts = {}) => {
   if (_.isEmpty(settings)) {
     let babelRC;
     try {
@@ -66,7 +82,7 @@ export const readSettings = (rootDir = '.') => {
 
     const mrs = moduleResolverSettings(babelRC);
     const ms = resolverSettings(babelRC);
-    const wb = readWebpackConfig(rootDir);
+    const wb = readWebpackConfig(rootDir, opts);
 
     settings = _.fromPairs([
       ['root', _.flow(
@@ -79,12 +95,14 @@ export const readSettings = (rootDir = '.') => {
         _.uniq,
         _.fromPairs,
       )([ms, mrs, wb])],
+      ['externals', _.get('externals')(wb)],
     ]);
   }
 
   return _.defaults({
     root: [],
     alias: [],
+    externals: [],
   })(settings);
 };
 
