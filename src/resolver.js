@@ -10,7 +10,6 @@ import isCore from 'core';
 import { readSettings, readDependencies, defaultValidExtensions } from 'settings';
 
 const resolve = (source, file, options = {}) => {
-
   if (_.isEmpty(source) || !source) {
     return { found: false };
   }

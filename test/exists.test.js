@@ -1,6 +1,6 @@
 import test from 'tape';
 import _ from 'lodash/fp';
-import { default as exists, dirExists } from 'exists';
+import exists, { dirExists } from 'exists';
 
 const extensions = [
   '.js',
