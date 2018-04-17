@@ -2,11 +2,11 @@
 
 [![npmjs](https://img.shields.io/npm/v/@bitsnap/import-resolver.svg)](https://npmjs.org/package/@bitsnap/import-resolver)
 [![downloads](https://img.shields.io/npm/dw/@bitsnap/import-resolver.svg)](https://npmjs.org/package/@bitsnap/import-resolver)
-[![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/import-resolver.svg)](https://circleci.com/gh/@bitsnap/import-resolver)
-[![Coverage Status](https://coveralls.io/repos/github/bitsnap/import-resolver/badge.svg?branch=master)](https://coveralls.io/github/@bitsnap/import-resolver?branch=master) 
-[![dependencies](https://david-dm.org/@bitsnap/import-resolver.svg)](https://david-dm.org/@bitsnap/import-resolver)
-[![devDependencies](https://david-dm.org/@bitsnap/import-resolver/dev-status.svg)](https://david-dm.org/@bitsnap/import-resolver#info=devDependencies)
-
+[![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/import-resolver.svg)](https://circleci.com/gh/@itsnap/import-resolver)
+[![Coverage Status](https://img.shields.io/coveralls/github/bitsnap/import-resolver.svg)](https://coveralls.io/github/bitsnap/import-resolver?branch=master) 
+[![dependencies](https://img.shields.io/david/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver)
+[![devDependencies](https://img.shields.io/david/dev/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver#info=devDependencies)
+	
 Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
 but had been developed for [eslint-plugin-flowtype-typecheck](https://github.com/bitsnap/eslint-plugin-flowtype-typecheck).
 
