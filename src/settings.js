@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import _ from 'lodash/fp';
 
 export const defaultValidExtensions = ['.js', '.mjs', '.json', '.jsx'];
@@ -33,6 +34,25 @@ export const clear = () => {
   dependencies = {};
 };
 
+export const readWebpackConfig = (rootDir = '.') => {
+  let webpackConfig;
+  try {
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    webpackConfig = require(path.join(rootDir, 'webpack.config.js'));
+  } catch (err) {
+    return { root: [], alias: {} };
+  }
+
+  if (!_.isPlainObject(webpackConfig)) {
+    return { root: [], alias: {} };
+  }
+
+  return {
+    root: _.get('resolve.modules')(webpackConfig) || [],
+    alias: _.get('resolve.alias')(webpackConfig) || [],
+  };
+};
+
 export const readSettings = (rootDir = '.') => {
   if (_.isEmpty(settings)) {
     let babelRC;
@@ -46,13 +66,19 @@ export const readSettings = (rootDir = '.') => {
 
     const mrs = moduleResolverSettings(babelRC);
     const ms = resolverSettings(babelRC);
+    const wb = readWebpackConfig(rootDir);
 
     settings = _.fromPairs([
-      ['root', _.uniq(_.concat(_.get('root')(ms), _.get('root')(mrs)))],
-      ['alias', _.fromPairs(_.concat(
-        _.toPairs(_.get('alias')(ms)),
-        _.toPairs(_.get('alias')(mrs)),
-      ))],
+      ['root', _.flow(
+        _.flatMap(_.get('root')),
+        _.uniq,
+      )([ms, mrs, wb])],
+      ['alias', _.flow(
+        _.map(_.get('alias')),
+        _.flatMap(_.toPairs),
+        _.uniq,
+        _.fromPairs,
+      )([ms, mrs, wb])],
     ]);
   }
 

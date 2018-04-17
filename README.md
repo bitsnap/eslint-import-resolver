@@ -8,12 +8,10 @@
 [![devDependencies](https://img.shields.io/david/dev/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver#info=devDependencies)
 	
 Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
-but had been developed for [eslint-plugin-flowtype-typecheck](https://github.com/bitsnap/eslint-plugin-flowtype-typecheck).
+but had been developed for [@bitsnap/eslint-plugin-flow](https://github.com/bitsnap/eslint-plugin-flow).
 
-Supports resolving of `node_modules`, [babel-plugin-resolver](https://github.com/jshanson7/babel-plugin-resolver) and
-[babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) modules.
-
-I'll add a webpack module resolver soon.
+Supports resolving of `node_modules`, [babel-plugin-resolver](https://github.com/jshanson7/babel-plugin-resolver),
+[babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) and [webpack](https://webpack.js.org) modules.
 
 ## How to use 
 
@@ -26,14 +24,20 @@ I'll add a webpack module resolver soon.
 {
   "settings": {
     "import/resolver": {
-      "@bitsnap/import-resolver": { // defaults
-        "root": `${process.cwd}`
-        "extensions": ['.js', '.mjs', '.json', '.jsx']
-      }
+      "@bitsnap/import-resolver": { /* optional settings */ }
     }
   }
   "plugins": ["eslint-plugin-import"],
   "extends": ["plugin:eslint-plugin-import/recommended"]
+}
+```
+
+defaults are
+
+```js
+{
+  "root": `${process.cwd}`
+  "extensions": ['.js', '.mjs', '.json', '.jsx']
 }
 ```
 

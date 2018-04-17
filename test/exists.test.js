@@ -39,7 +39,7 @@ test('should resolve an indexed directory', (t) => {
 test('should resolve a node module main targets', (t) => {
   const testFixtures = [
     ['fixtures/node_modules/dummy', 'main-jsnext.js'],
-    ['fixtures/node_modules/dummy2', 'main.js'],
+    ['fixtures/node_modules/dummy-main', 'main.js'],
   ];
 
   t.plan(testFixtures.length);

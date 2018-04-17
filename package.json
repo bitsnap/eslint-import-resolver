@@ -1,11 +1,12 @@
 {
   "name": "@bitsnap/import-resolver",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Universal import resolver",
   "keywords": [
+    "universal",
     "eslint",
-    "eslint-plugin-import",
     "module",
+    "import",
     "resolver"
   ],
   "main": "dist/import-resolver.min.js",

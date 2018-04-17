@@ -9,12 +9,13 @@ test('Should get both module-resolver and resolver settings', (t) => {
     alias: {
       pam: 'alias',
     },
-  }], [
-    `${__dirname}/test/fixtures/dependencies`, {
-      root: [],
-      alias: [],
-    },
-  ]];
+  }], [`${__dirname}/fixtures/settings-webpack`, {
+    root: ['webpack-src', 'webpack-test'],
+    alias: { css: 'stylesheets' },
+  }], [`${__dirname}/fixtures/dependencies`, {
+    root: [],
+    alias: [],
+  }]];
 
   t.plan(testSettings.length);
   _.forEach(([r, settings]) => {
@@ -27,7 +28,7 @@ test('Should get package dependencies', (t) => {
   const testDependencies = [[`${__dirname}/fixtures/dependencies`, [
     '@babel/cli', '@babel/core', 'lodash', 'coveralls', 'eslint',
   ]], [
-    `${__dirname}/test/fixtures/settings`, [],
+    `${__dirname}/fixtures/settings`, [],
   ]];
 
   t.plan(testDependencies.length);
