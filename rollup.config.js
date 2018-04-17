@@ -35,7 +35,7 @@ export default {
     'fs',
   ],
   output: [{
-    file: 'dist/eslint-import-resolver.min.js',
+    file: 'dist/import-resolver.min.js',
     format: 'cjs',
     sourcemap: true,
   }],

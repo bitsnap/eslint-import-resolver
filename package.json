@@ -1,5 +1,5 @@
 {
-  "name": "eslint-import-resolver",
+  "name": "@bitsnap/import-resolver",
   "version": "0.1.0",
   "description": "Universal import resolver",
   "keywords": [
@@ -8,10 +8,10 @@
     "module",
     "resolver"
   ],
-  "main": "dist/eslint-import-resolver.min.js",
+  "main": "dist/import-resolver.min.js",
   "files": [
-    "dist/eslint-import-resolver.min.js",
-    "dist/eslint-import-resolver.min.js.map"
+    "dist/import-resolver.min.js",
+    "dist/import-resolver.min.js.map"
   ],
   "scripts": {
     "format": "./node_modules/.bin/eslint --fix src/**/*.js test/**/*.js",
@@ -28,7 +28,7 @@
     "lodash-magic-cache": "^0.2.0"
   },
   "license": "MIT",
-  "repository": "github:bitsnap/eslint-import-resolver",
+  "repository": "github:bitsnap/import-resolver",
   "devDependencies": {
     "lodash": "^4.17.5",
     "@babel/cli": "^7.0.0-beta.44",

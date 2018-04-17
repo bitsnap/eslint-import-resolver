@@ -11,7 +11,7 @@
   ],
   "settings": {
     "import/resolver": {
-      "./dist/eslint-import-resolver.min.js": {}
+      "./dist/import-resolver.min.js": {}
     }
   },
   "extends": [

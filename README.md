@@ -1,11 +1,11 @@
-# eslint-import-resolver
+# @bitsnap/import-resolver
 
-[![npmjs](https://img.shields.io/npm/v/eslint-import-resolver.svg)](https://npmjs.org/package/eslint-import-resolver)
-[![downloads](https://img.shields.io/npm/dw/eslint-import-resolver.svg)](https://npmjs.org/package/eslint-import-resolver)
-[![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/eslint-import-resolver.svg)](https://circleci.com/gh/bitsnap/eslint-import-resolver)
-[![Coverage Status](https://coveralls.io/repos/github/bitsnap/eslint-import-resolver/badge.svg?branch=master)](https://coveralls.io/github/bitsnap/eslint-import-resolver?branch=master) 
-[![dependencies](https://david-dm.org/bitsnap/eslint-import-resolver.svg)](https://david-dm.org/bitsnap/eslint-import-resolver)
-[![devDependencies](https://david-dm.org/bitsnap/eslint-import-resolver/dev-status.svg)](https://david-dm.org/bitsnap/eslint-import-resolver#info=devDependencies)
+[![npmjs](https://img.shields.io/npm/v/@bitsnap/import-resolver.svg)](https://npmjs.org/package/@bitsnap/import-resolver)
+[![downloads](https://img.shields.io/npm/dw/@bitsnap/import-resolver.svg)](https://npmjs.org/package/@bitsnap/import-resolver)
+[![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/import-resolver.svg)](https://circleci.com/gh/@bitsnap/import-resolver)
+[![Coverage Status](https://coveralls.io/repos/github/bitsnap/import-resolver/badge.svg?branch=master)](https://coveralls.io/github/@bitsnap/import-resolver?branch=master) 
+[![dependencies](https://david-dm.org/@bitsnap/import-resolver.svg)](https://david-dm.org/@bitsnap/import-resolver)
+[![devDependencies](https://david-dm.org/@bitsnap/import-resolver/dev-status.svg)](https://david-dm.org/@bitsnap/import-resolver#info=devDependencies)
 
 Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
 but had been developed for [eslint-plugin-flowtype-typecheck](https://github.com/bitsnap/eslint-plugin-flowtype-typecheck).
@@ -18,7 +18,7 @@ I'll add a webpack module resolver soon.
 ## How to use 
 
 ```
-> npm i --save-dev eslint-import-resolver eslint lodash
+> npm i --save-dev @bitsnap/import-resolver eslint lodash
 ```
 
 *.eslintrc*
@@ -26,7 +26,7 @@ I'll add a webpack module resolver soon.
 {
   "settings": {
     "import/resolver": {
-      "eslint-import-resolver": { // defaults
+      "@bitsnap/import-resolver": { // defaults
         "root": `${process.cwd}`
         "extensions": ['.js', '.mjs', '.json', '.jsx']
       }
