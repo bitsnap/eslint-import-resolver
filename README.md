@@ -10,6 +10,7 @@
 
 Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
 but had been developed for [eslint-plugin-flowtype-typecheck](https://github.com/bitsnap/eslint-plugin-flowtype-typecheck).
+
 Supports resolving of `node_modules`, [babel-plugin-resolver](https://github.com/jshanson7/babel-plugin-resolver) and
 [babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) modules.
 
@@ -39,7 +40,8 @@ I'll add a webpack module resolver soon.
 
 Aliases are applied only for the start and the ending of the module path.
 With `"alias": { "mod": "pam" }` `module/mod/index.js` wouldn't be aliased, but `module/mod -> module/pam` will.
-Aliasing is pretty uncommon, but can be handy. 
+
+Aliasing is pretty uncommon, but can be handy from time to time.
 
 ### Q&A
 
