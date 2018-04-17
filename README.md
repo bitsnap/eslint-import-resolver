@@ -1,6 +1,5 @@
 # eslint-import-resolver
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/bitsnap/eslint-import-resolver.svg)](https://greenkeeper.io/)
 [![npmjs](https://img.shields.io/npm/v/eslint-import-resolver.svg)](https://npmjs.org/package/eslint-import-resolver)
 [![downloads](https://img.shields.io/npm/dw/eslint-import-resolver.svg)](https://npmjs.org/package/eslint-import-resolver)
 [![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/eslint-import-resolver.svg)](https://circleci.com/gh/bitsnap/eslint-import-resolver)
