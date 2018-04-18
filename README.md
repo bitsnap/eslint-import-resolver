@@ -4,9 +4,9 @@
 [![downloads](https://img.shields.io/npm/dw/@bitsnap/import-resolver.svg)](https://npmjs.org/package/@bitsnap/import-resolver)
 [![CircleCI](https://img.shields.io/circleci/project/github/bitsnap/import-resolver.svg)](https://circleci.com/gh/bitsnap/import-resolver)
 [![Coverage Status](https://img.shields.io/coveralls/github/bitsnap/import-resolver.svg)](https://coveralls.io/github/bitsnap/import-resolver?branch=master) 
-[![dependencies](https://img.shields.io/david/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver)
 [![devDependencies](https://img.shields.io/david/dev/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver#info=devDependencies)
-	
+[![Climate](https://img.shields.io/codeclimate/maintainability/bitsnap/import-resolver.svg)](https://codeclimate.com/github/bitsnap/import-resolver)
+
 Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
 but had been developed for [@bitsnap/eslint-plugin-flow](https://github.com/bitsnap/eslint-plugin-flow).
 
