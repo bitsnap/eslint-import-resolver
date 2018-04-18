@@ -27,7 +27,7 @@ const lookupRelative = (source, file, validExtensions) => {
 const lookupExternals = (source, externals) => !!_.find(e =>
   (_.isString(e) ? _.startsWith(e)(source) : source.match(e)))(externals);
 
-const lookupRoot = (source, roots, validExtensions) => {
+const lookupRoot = (source, root, roots, validExtensions) => {
   const rootPaths = _.map(r => path.join(root, r, source))(roots);
 
   return _.flow(
@@ -37,7 +37,7 @@ const lookupRoot = (source, roots, validExtensions) => {
   )(rootPaths);
 };
 
-const lookupDeps = (source, deps, validExtensions) => {
+const lookupDeps = (source, root, deps, validExtensions) => {
   if (_.find(d => _.startsWith(d)(source))(deps)) {
     return exists(path.join(root, 'node_modules', source), validExtensions);
   }
@@ -69,11 +69,17 @@ const resolve = (source, file, options = {}) => {
   const aliasedSource = replaceAliases(source, settings.alias);
   const deps = readDependencies(root);
 
-  const filePath = _.takeWhile(lookup => !lookup())([
-    lookupRelative(aliasedSource, file, validExtensions),
-    lookupExternals(aliasedSource, settings.externals),
-    lookupRoot(aliasedSource, settings.root, validExtensions),
-    lookupDeps(aliasedSource, deps, validExtensions),
+  const filePath = _.reduce((result, lookup) => {
+    if (!result) {
+      return lookup();
+    }
+
+    return result;
+  })(false)([
+    () => lookupRelative(aliasedSource, file, validExtensions),
+    () => lookupExternals(aliasedSource, settings.externals),
+    () => lookupRoot(aliasedSource, root, settings.root, validExtensions),
+    () => lookupDeps(aliasedSource, root, deps, validExtensions),
   ]);
 
   return { found: _.isString(filePath) || filePath === true, path: filePath };
