@@ -2,7 +2,7 @@ import _ from 'lodash/fp';
 import fs from 'fs';
 import path from 'path';
 
-import { defaultValidExtensions } from 'settings';
+import { defaultValidExtensions, parseJson } from 'settings';
 
 export const fileExists = (p, validExtensions = defaultValidExtensions) => {
   const paths = _.concat(
@@ -27,32 +27,27 @@ export const dirExists = (p) => {
   }
 };
 
-const exists = (mod, validExtensions) => {
-  let f = fileExists(mod, validExtensions);
-  if (f) {
-    return f;
+const exists = (mod, validExtensions) => _.reduce((result, lookup) => {
+  if (!result) {
+    return lookup();
   }
 
-  if (dirExists(mod)) {
-    f = fileExists(path.join(mod, 'index'), validExtensions);
-    if (f) {
-      return f;
-    }
-
+  return result;
+})(false)([
+  () => fileExists(mod, validExtensions),
+  () => fileExists(path.join(mod, 'index'), validExtensions),
+  () => {
     if (fileExists(path.join(mod, 'package.json'))) {
-      const p = JSON.parse(fs.readFileSync(`${mod}/package.json`, {
-        encoding: 'utf8',
-      }).toString());
+      const pkg = parseJson(mod, 'package.json');
 
-      const main = _.get('jsnext:main')(p) || _.get('main')(p);
-      f = path.join(mod, main);
-      if (fileExists(f, validExtensions)) {
-        return f;
+      const main = _.get('jsnext:main')(pkg) || _.get('main')(pkg) || null;
+      if (main) {
+        return fileExists(path.join(mod, main), validExtensions);
       }
     }
-  }
 
-  return false;
-};
+    return false;
+  },
+]);
 
 export default exists;

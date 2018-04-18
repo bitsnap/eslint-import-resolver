@@ -69,7 +69,7 @@ export const readWebpackConfig = (rootDir = '.', opts) => {
   };
 };
 
-const parseJson = (rootDir, file) => {
+export const parseJson = (rootDir, file) => {
   try {
     return JSON.parse(fs.readFileSync(`${rootDir}/${file}`, {
       encoding: 'utf8',
@@ -111,17 +111,17 @@ export const readSettings = (rootDir = '.', opts = {}) => {
 
 export const readDependencies = (rootDir = '.') => {
   if (_.isEmpty(dependencies)) {
-    const p = parseJson(rootDir, 'package.json');
+    const pkg = parseJson(rootDir, 'package.json');
 
     dependencies = _.flow(
-      pkg => _.flatMap(_.identity)(_.map(d => _.keys(_.get(d)(pkg)))([
+      p => _.flatMap(_.identity)(_.map(d => _.keys(_.get(d)(p)))([
         'dependencies',
         'peerDependencies',
         'devDependencies',
       ])),
       _.uniq,
       _.compact,
-    )(p);
+    )(pkg);
   }
 
   return dependencies;
