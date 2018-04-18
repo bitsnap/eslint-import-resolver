@@ -69,16 +69,19 @@ export const readWebpackConfig = (rootDir = '.', opts) => {
   };
 };
 
+const parseJson = (rootDir, file) => {
+  try {
+    return JSON.parse(fs.readFileSync(`${rootDir}/${file}`, {
+      encoding: 'utf8',
+    }).toString());
+  } catch (err) {
+    return {};
+  }
+};
+
 export const readSettings = (rootDir = '.', opts = {}) => {
   if (_.isEmpty(settings)) {
-    let babelRC;
-    try {
-      babelRC = JSON.parse(fs.readFileSync(`${rootDir}/.babelrc`, {
-        encoding: 'utf8',
-      }).toString());
-    } catch (err) {
-      babelRC = {};
-    }
+    const babelRC = parseJson(rootDir, '.babelrc');
 
     const mrs = moduleResolverSettings(babelRC);
     const ms = resolverSettings(babelRC);
@@ -108,14 +111,7 @@ export const readSettings = (rootDir = '.', opts = {}) => {
 
 export const readDependencies = (rootDir = '.') => {
   if (_.isEmpty(dependencies)) {
-    let p;
-    try {
-      p = JSON.parse(fs.readFileSync(`${rootDir}/package.json`, {
-        encoding: 'utf8',
-      }).toString());
-    } catch (err) {
-      p = {};
-    }
+    const p = parseJson(rootDir, 'package.json');
 
     dependencies = _.flow(
       pkg => _.flatMap(_.identity)(_.map(d => _.keys(_.get(d)(pkg)))([
