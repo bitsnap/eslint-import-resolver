@@ -17,7 +17,7 @@
   "scripts": {
     "format": "./node_modules/.bin/eslint --fix src/**/*.js test/**/*.js",
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
-    "test": "./node_modules/.bin/nyc --reporter=lcov ./node_modules/.bin/tape -r @babel/register ./test/*.test.js"
+    "test": "./node_modules/.bin/nyc --reporter=lcov --reporter=text ./node_modules/.bin/tape -r @babel/register ./test/*.test.js"
   },
   "authors": [
     "Yuriy Yarosh <void.nugget@gmail.com>"
@@ -50,10 +50,17 @@
     "eslint-plugin-lodash-magic-import": "^0.1.2",
     "eslint-plugin-react": "^7.9.1",
     "eslint-plugin-unicorn": "^4.0.3",
-    "nyc": "^13.0.0",
+    "nyc": "^12.0.2",
     "rollup": "^0.60.1",
     "rollup-plugin-babel": "^4.0.0-beta.4",
     "tape": "^4.9.1"
+  },
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false,
+    "exclude": [
+      "test/*.js"
+    ]
   }
 }
 
