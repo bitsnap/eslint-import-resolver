@@ -1,7 +1,7 @@
 {
   "name": "@bitsnap/import-resolver",
   "description": "Universal import resolver",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "authors": [
     "Yuriy Yarosh <void.nugget@gmail.com>"
   ],
