@@ -1,72 +1,25 @@
 import fs from 'fs';
-import path from 'path';
 import _ from 'lodash/fp';
+import { loadPartialConfig } from '@babel/core/lib/config';
 
 export const defaultValidExtensions = ['.js', '.mjs', '.json', '.jsx'];
 
 let settings = {};
-let dependencies = {};
+let dependencies = [];
 
-const moduleResolverSettings = _.flow(
-  _.get('plugins'),
-  _.filter(_.isArray),
-  _.find(p => _.first(p) === 'module-resolver'),
-  _.nth(1),
-  _.defaults({
-    root: [],
-    alias: [],
-    externals: [],
+const pluginOptions = (name, babelRC) => _.flow(
+  _.get('options.plugins'),
+  _.find({
+    file: {
+      request: name,
+    },
   }),
-);
-
-const resolverSettings = _.flow(
-  _.get('plugins'),
-  _.filter(_.isArray),
-  _.find(p => _.first(p) === 'resolver'),
-  _.nth(1),
-  _.defaults({
-    resolveDirs: [],
-  }),
-  r => ({ root: r.resolveDirs, alias: {}, externals: [] }),
-);
+  _.get('options'),
+)(babelRC);
 
 export const clear = () => {
   settings = {};
   dependencies = {};
-};
-
-export const readWebpackConfig = (rootDir = '.', opts) => {
-  let webpackConfig;
-  try {
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    webpackConfig = require(path.join(rootDir, 'webpack.config.js'));
-  } catch (err) {
-    return { root: [], alias: {}, externals: [] };
-  }
-
-  const webpackConfigIndex = _.get('webpackConfigIndex')(opts) || 0;
-
-  if (_.isArray(webpackConfig)) {
-    webpackConfig = _.nth(webpackConfigIndex)(webpackConfig) || {};
-  } else if (!_.isPlainObject(webpackConfig)) {
-    return { root: [], alias: {}, externals: [] };
-  }
-
-  let externals = _.get('externals')(webpackConfig) || [];
-
-  if (_.isArray(externals)) {
-    externals = _.filter(e => _.isString(e) || _.isRegExp(e))(externals);
-  }
-
-  if (_.isPlainObject(externals)) {
-    externals = _.keys(externals);
-  }
-
-  return {
-    root: _.get('resolve.modules')(webpackConfig) || [],
-    alias: _.get('resolve.alias')(webpackConfig) || [],
-    externals,
-  };
 };
 
 export const parseJson = (rootDir, file) => {
@@ -74,39 +27,59 @@ export const parseJson = (rootDir, file) => {
     return JSON.parse(fs.readFileSync(`${rootDir}/${file}`, {
       encoding: 'utf8',
     }).toString());
-  } catch (err) {
+  } catch (error) {
     return {};
   }
 };
 
-export const readSettings = (rootDir = '.', opts = {}) => {
+const defaults = {
+  root: [],
+  alias: {},
+  externals: [],
+};
+
+export const readSettings = (rootDir = process.cwd()) => {
   if (_.isEmpty(settings)) {
-    const babelRC = parseJson(rootDir, '.babelrc');
+    const babelRCPath = `${rootDir}/.babelrc`;
 
-    const mrs = moduleResolverSettings(babelRC);
-    const ms = resolverSettings(babelRC);
-    const wb = readWebpackConfig(rootDir, opts);
+    try {
+      fs.lstatSync(babelRCPath).isFile();
+    } catch (error) {
+      return defaults;
+    }
 
-    settings = _.fromPairs([
-      ['root', _.flow(
-        _.flatMap(_.get('root')),
+    const babelRC = loadPartialConfig({
+      root: rootDir,
+      rootMode: 'root',
+      configFile: babelRCPath,
+    });
+
+    const mrs = pluginOptions('module-resolver', babelRC);
+    let ms = pluginOptions('resolver', babelRC);
+
+    ms = {
+      root: _.get('resolveDirs')(ms),
+      alias: _.get('alias')(ms),
+      externals: _.get('externals')(ms),
+    };
+
+    // { alias: [{a: b}, {c: d}]} => { alias: {a: b, c: d}}
+    const reduceAlias = o => _.assign(o)({
+      alias: _.reduce(_.assign, {})(o.alias),
+    });
+
+    settings = _.flow(
+      _.assignInWith(_.flow(
+        _.concat,
         _.uniq,
-      )([ms, mrs, wb])],
-      ['alias', _.flow(
-        _.map(_.get('alias')),
-        _.flatMap(_.toPairs),
-        _.uniq,
-        _.fromPairs,
-      )([ms, mrs, wb])],
-      ['externals', _.get('externals')(wb)],
-    ]);
+        _.compact,
+      )),
+      reduceAlias,
+      _.defaults(defaults),
+    )(mrs, ms);
   }
 
-  return _.defaults({
-    root: [],
-    alias: [],
-    externals: [],
-  })(settings);
+  return settings;
 };
 
 export const readDependencies = (rootDir = '.') => {
@@ -114,14 +87,15 @@ export const readDependencies = (rootDir = '.') => {
     const pkg = parseJson(rootDir, 'package.json');
 
     dependencies = _.flow(
-      p => _.flatMap(_.identity)(_.map(d => _.keys(_.get(d)(p)))([
-        'dependencies',
-        'peerDependencies',
-        'devDependencies',
-      ])),
-      _.uniq,
+      _.flatMap(p => _.toPairs(_.get(p)(pkg))),
       _.compact,
-    )(pkg);
+      _.map(_.nth(0)),
+      _.uniq,
+    )([
+      'dependencies',
+      'peerDependencies',
+      'devDependencies',
+    ]);
   }
 
   return dependencies;

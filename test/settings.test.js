@@ -5,21 +5,14 @@ import { readSettings, readDependencies, clear } from 'settings';
 
 test('Should get both module-resolver and resolver settings', (t) => {
   const testSettings = [[`${__dirname}/fixtures/settings`, {
-    root: ['resolver-root', 'test', 'module-resolver-root'],
+    root: ['module-resolver-root', 'test', 'resolver-root'],
     alias: {
       pam: 'alias',
     },
     externals: [],
-  }], [`${__dirname}/fixtures/settings-webpack`, {
-    root: ['webpack-src', 'webpack-test'],
-    alias: { css: 'stylesheets' },
-    externals: [
-      'jQuery',
-      /angular/,
-    ],
   }], [`${__dirname}/fixtures/dependencies`, {
     root: [],
-    alias: [],
+    alias: {},
     externals: [],
   }]];
 
@@ -42,11 +35,4 @@ test('Should get package dependencies', (t) => {
     clear();
     t.deepEqual(readDependencies(d), settings);
   })(testDependencies);
-});
-
-test('Should get webpack array settings', (t) => {
-  const objSettings = readSettings(`${__dirname}/fixtures/settings-webpack`, {});
-  const arrSettings = readSettings(`${__dirname}/fixtures/settings-webpack-arr`, { webpackConfigIndex: 1 });
-  t.plan(1);
-  t.deepEqual(arrSettings, objSettings);
 });

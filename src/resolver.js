@@ -1,6 +1,3 @@
-// because tleunen/babel-plugin-module-resolver is broken
-// and building an import resolver is not a rocket science
-
 import path from 'path';
 import _ from 'lodash/fp';
 
@@ -24,8 +21,13 @@ const lookupRelative = (source, file, validExtensions) => {
   return exists(curDirMod, validExtensions);
 };
 
-const lookupExternals = (source, externals) => !!_.find(e =>
-  (_.isString(e) ? _.startsWith(e)(source) : source.match(e)))(externals);
+const lookupExternals = (source, externals) => _.filter(_.overEvery([
+  _.isString,
+  _.overSome([
+    e => _.startsWith(e)(source),
+    e => source.match(e),
+  ]),
+]))(externals);
 
 const lookupRoot = (source, root, roots, validExtensions) => {
   const rootPaths = _.map(r => path.join(root, r, source))(roots);
@@ -45,7 +47,7 @@ const lookupDeps = (source, root, deps, validExtensions) => {
   return false;
 };
 
-const resolve = (source, file, options = {}) => {
+export const resolveAll = (source, file, options = {}) => {
   if (_.overSome([_.isEmpty, s => !s])(source)) {
     return { found: false };
   }
@@ -69,19 +71,24 @@ const resolve = (source, file, options = {}) => {
   const aliasedSource = replaceAliases(source, settings.alias);
   const deps = readDependencies(root);
 
-  const filePath = _.reduce((result, lookup) => {
-    if (!result) {
-      return lookup();
-    }
-
-    return result;
-  })(false)([
-    () => lookupRelative(aliasedSource, file, validExtensions),
-    () => lookupExternals(aliasedSource, settings.externals),
-    () => lookupRoot(aliasedSource, root, settings.root, validExtensions),
-    () => lookupDeps(aliasedSource, root, deps, validExtensions),
+  return _.flow(
+    _.map(e => (_.isEmpty(e) ? undefined : e)),
+    _.compact,
+  )([
+    lookupRelative(aliasedSource, file, validExtensions),
+    lookupExternals(aliasedSource, settings.externals),
+    lookupRoot(aliasedSource, root, settings.root, validExtensions),
+    lookupDeps(aliasedSource, root, deps, validExtensions),
   ]);
+};
 
+const resolve = (source, file, options = {}) => {
+  const resolved = resolveAll(source, file, options);
+  if (_.get('found')(resolved)) {
+    return { found: true, path: file };
+  }
+
+  const filePath = _.nth(0)(resolved);
   return { found: _.isString(filePath) || filePath === true, path: filePath };
 };
 

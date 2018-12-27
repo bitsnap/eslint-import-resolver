@@ -21,22 +21,36 @@ const bundleBabelRC = {
   ],
 };
 
-export default {
-  input: 'src/main.js',
+const opts = {
   plugins: [
     babel({
       babelrc: false,
       ...bundleBabelRC,
     }),
   ],
+
   external: [
+    '@babel/core/lib/config',
     'lodash-magic-cache',
     'path',
     'fs',
   ],
-  output: [{
+};
+
+export default [{
+  input: 'src/cli.js',
+  output: {
+    file: 'dist/resolve.min.js',
+    format: 'cjs',
+    sourcemap: true,
+  },
+  ...opts,
+}, {
+  input: 'src/main.js',
+  output: {
     file: 'dist/import-resolver.min.js',
     format: 'cjs',
     sourcemap: true,
-  }],
-};
+  },
+  ...opts,
+}];

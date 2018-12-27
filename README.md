@@ -7,11 +7,10 @@
 [![devDependencies](https://img.shields.io/david/dev/bitsnap/import-resolver.svg)](https://david-dm.org/bitsnap/import-resolver#info=devDependencies)
 [![Climate](https://img.shields.io/codeclimate/maintainability/bitsnap/import-resolver.svg)](https://codeclimate.com/github/bitsnap/import-resolver)
 
-Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:, 
-but had been developed for [@bitsnap/eslint-plugin-flow](https://github.com/bitsnap/eslint-plugin-flow).
+Universal import resolver for [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) :cat2:.
 
 Supports resolving of `node_modules`, [babel-plugin-resolver](https://github.com/jshanson7/babel-plugin-resolver),
-[babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) and [webpack](https://webpack.js.org) modules.
+[babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver).
 
 ## How to use 
 
@@ -38,7 +37,6 @@ defaults are
 {
   "root": `${process.cwd}`,
   "extensions": ['.js', '.mjs', '.json', '.jsx'],
-  "webpackConfigIndex": 0, // if webpack.config.js exports an Arrays
 }
 ```
 

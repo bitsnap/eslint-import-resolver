@@ -15,7 +15,7 @@ test('Should resolve core modules', (t) => {
 test('Should resolve modules', (t) => {
   const addRootDir = p => _.map(e => _.concat(e)(p));
 
-  let testTable = addRootDir(path.normalize(`${__dirname}/..`))([
+  const testTable = addRootDir(path.normalize(`${__dirname}/..`))([
     ['path', 'path'],
     ['fs', 'fs'],
     ['child_process', 'child_process'],
@@ -27,6 +27,7 @@ test('Should resolve modules', (t) => {
     ['resolver.test', 'test/resolver.test.js'],
     ['core.js', 'src/core.js'],
     ['core', 'src/core.js'],
+    ['dummy/dummy.js', 'src/dummy/dummy.js'],
     ['fixtures/pam', 'test/fixtures/alias/index.js'],
     ['fixtures/alias', 'test/fixtures/alias/index.js'],
     ['lodash', 'node_modules/lodash/index.js'],
@@ -34,13 +35,6 @@ test('Should resolve modules', (t) => {
     ['lodash/fp', 'node_modules/lodash/fp.js'],
     ['lodash/fp/forEach', 'node_modules/lodash/fp/forEach.js'],
   ]);
-
-  const testTableWithExternals = addRootDir(path.normalize(`${__dirname}/../test/fixtures/settings-webpack`))([
-    ['jQuery', 'jQuery'],
-    ['angular', 'angular'],
-  ]);
-
-  testTable = _.concat(testTable)(testTableWithExternals);
 
   const isExternal = m => _.includes(m)([
     'jQuery',

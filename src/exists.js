@@ -13,7 +13,7 @@ export const fileExists = (p, validExtensions = defaultValidExtensions) => {
   return _.find((f) => {
     try {
       return fs.lstatSync(f).isFile();
-    } catch (err) {
+    } catch (error) {
       return false;
     }
   })(paths);
@@ -22,7 +22,7 @@ export const fileExists = (p, validExtensions = defaultValidExtensions) => {
 export const dirExists = (p) => {
   try {
     return fs.lstatSync(p).isDirectory();
-  } catch (e) {
+  } catch (error) {
     return false;
   }
 };
